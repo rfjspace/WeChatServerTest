@@ -3,6 +3,7 @@ package com.wechatserver.servlet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wechatserver.util.AccessTokenUtils;
 import com.wechatserver.util.ConnectionHandlerUtils;
 
 @WebServlet(
@@ -18,8 +20,8 @@ import com.wechatserver.util.ConnectionHandlerUtils;
         urlPatterns = "/WeChatMainServlet", 
         loadOnStartup = 1, 
         initParams = {
-		   @WebInitParam(name = "appId", value = ""), 
-		   @WebInitParam(name = "appSecret", value = "") 
+		   @WebInitParam(name = "appId", value = "wx29bdb41bfe33b029"), 
+		   @WebInitParam(name = "appSecret", value = "338b417ce51eaaf3dcf08f7f979c3397") 
 		})
 public class WeChatMainServlet extends HttpServlet {
 
@@ -27,8 +29,12 @@ public class WeChatMainServlet extends HttpServlet {
 	
 	@Override
 	public void init() throws ServletException {
+		System.out.println("启动WebServlet");
 		super.init();
-		
+		final String appId=getInitParameter("appId");
+		final String appSecret =getInitParameter("appSecret");
+		//获取微信公众号接口权限
+		AccessTokenUtils.getWeChatPermission(appId, appSecret);
 	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
