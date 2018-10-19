@@ -7,8 +7,6 @@ import java.util.Map;
 
 public class ConnectionHandlerUtils {
 
-	private final static String TOKEN = "token";// Token可由开发者可以任意填写，用作生成签名
-
 	/**
 	 * 微信公众号服务器转发请求的验证
 	 * 
@@ -16,18 +14,18 @@ public class ConnectionHandlerUtils {
 	 *            微信公众号服务器转发的服务器消息
 	 * @return true 微信公众号服务器与servlet服务器通信成功 false 微信公众号服务器与servlet服务器通信失败
 	 */
-	public static boolean wechatConnectionVaildate(Map<String, String> map) {
-		String signature = map.get("signature");// 微信加密签名
-		String timestamp = map.get("timestamp");// 时间戳
-		String nonce = map.get("nonce");// 随机数
+	public static boolean wechatConnectionVaildate(Map<String, String> map, String token) {
+		String signature = map.get("signature").toString();// 微信加密签名
+		String timestamp = map.get("timestamp").toString();// 时间戳
+		String nonce = map.get("nonce").toString();// 随机数
 
 		// 将token、timestamp、nonce三个参数进行字典序排序
-		String sortString = sort(TOKEN, timestamp, nonce);
+		String sortString = sort(token, timestamp, nonce);
 		// 加密,生成加密签名
 		String mySignature = sha1(sortString);
 		// 校验签名
-		System.out.println("微信加密签名 : "+signature);
-		System.out.println("生成加密签名 : "+mySignature);
+		System.out.println("微信加密签名 : " + signature);
+		System.out.println("生成加密签名 : " + mySignature);
 		if (mySignature != null && mySignature != "" && mySignature.equals(signature)) {
 			return true;
 		}
