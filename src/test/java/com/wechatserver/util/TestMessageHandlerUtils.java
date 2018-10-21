@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.wechatserver.util.MessageHandlerUtils.SendMsgType;
+import com.wechatserver.info.SendMsgType;
 
 public class TestMessageHandlerUtils {
 	@Test
 	public void test() {
-		MessageHandlerUtils mUtil = new MessageHandlerUtils();
+		MsgHandlerUtils mUtil = new MsgHandlerUtils();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		/*

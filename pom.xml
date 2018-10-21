@@ -19,6 +19,11 @@
 			<artifactId>dom4j</artifactId>
 			<version>1.6</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -3,8 +3,15 @@ package com.wechatserver.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Map;
 
+import com.wechatserver.info.WechatConfigInfo;
+
+/***
+ * 接入微信公众号服务器工具类
+ * 
+ * @author Administrator
+ *
+ */
 public class ConnectionHandlerUtils {
 
 	/**
@@ -14,18 +21,16 @@ public class ConnectionHandlerUtils {
 	 *            微信公众号服务器转发的服务器消息
 	 * @return true 微信公众号服务器与servlet服务器通信成功 false 微信公众号服务器与servlet服务器通信失败
 	 */
-	public static boolean wechatConnectionVaildate(Map<String, String> map, String token) {
-		String signature = map.get("signature").toString();// 微信加密签名
-		String timestamp = map.get("timestamp").toString();// 时间戳
-		String nonce = map.get("nonce").toString();// 随机数
+	public static boolean wechatConnectionVaildate(String token) {
+		String signature = WechatConfigInfo.signature;// 微信加密签名
+		String timestamp = WechatConfigInfo.timestamp;// 时间戳
+		String nonce = WechatConfigInfo.nonce;// 随机数
 
 		// 将token、timestamp、nonce三个参数进行字典序排序
 		String sortString = sort(token, timestamp, nonce);
 		// 加密,生成加密签名
 		String mySignature = sha1(sortString);
 		// 校验签名
-		System.out.println("微信加密签名 : " + signature);
-		System.out.println("生成加密签名 : " + mySignature);
 		if (mySignature != null && mySignature != "" && mySignature.equals(signature)) {
 			return true;
 		}

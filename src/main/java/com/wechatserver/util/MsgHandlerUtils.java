@@ -1,5 +1,6 @@
 package com.wechatserver.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -10,15 +11,71 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-public class MessageHandlerUtils {
+import com.wechatserver.info.SendMsgType;
+
+/***
+ * 微信公众号消息处理工具类
+ * 
+ * @author Administrator
+ *
+ */
+public class MsgHandlerUtils {
 	/***
-	 * 将微信服务器消息转化为Map集合
+	 * cryptFlg
+	 */
+	public String cryptFlg = "";
+
+	/***
+	 * 将微信公众号消息（明文模式和安全模式）转化为message集合
+	 * 
+	 * @param inputMsg
+	 *            微信公众号消息流
+	 * @return message集合
+	 */
+	public Map<String, Object> msgParse(InputStream inputMsg) {
+		// inputStream转map
+		Map<String, Object> cryptMap = this.parseMap(inputMsg);
+		if (null != cryptMap.get("Encrypt")) {
+			cryptFlg = "Encrypt";
+			String msgCrypt = MsgCryptionUtils.msgDecrypt(cryptMap.get("MsgSignature").toString(),
+					cryptMap.get("Encrypt").toString());// 消息解密
+			return this.parseMap(msgCrypt);// string转map
+		}
+		cryptFlg = "UnEncrypt";
+		return cryptMap;
+	}
+
+	/***
+	 * 将微信服务器InputStream消息转化为Map集合
 	 * 
 	 * @param input
-	 *            微信服务器消息
+	 *            明文模式数据
 	 * @return 微信服务器消息的K-V的映射集合
 	 */
-	public Map<String, Object> transFormXML(InputStream input) {
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> parseMap(InputStream input) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 读取输入流
+		Document document = getDocument(input);
+		// 得到xml根元素
+		Element root = document.getRootElement();
+		// 得到根元素的所有子节点
+		List<Element> elementList = root.elements();
+		// 遍历所有子节点
+		for (Element e : elementList) {
+			map.put(e.getName().toString(), e.getText());
+		}
+		return map;
+	}
+
+	/***
+	 * 将微信服务器String消息转化为Map集合
+	 * 
+	 * @param input
+	 *            安全模式数据
+	 * @return
+	 */
+	private Map<String, Object> parseMap(String input) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 读取输入流
 		Document document = getDocument(input);
@@ -53,6 +110,25 @@ public class MessageHandlerUtils {
 	}
 
 	/***
+	 * 将String类型消息转化为Xml格式数据
+	 * 
+	 * @param input
+	 *            微信服务器消息
+	 * @return 微信服务器消息的Xml格式
+	 */
+	private Document getDocument(String input) {
+		Document document = null;
+		// 读取输入流
+		SAXReader reader = new SAXReader();
+		try {
+			document = reader.read(input);
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+		return document;
+	}
+
+	/***
 	 * 构建服务器返回消息
 	 * 
 	 * @param map
@@ -67,6 +143,7 @@ public class MessageHandlerUtils {
 		String toUserName = map.get("FromUserName").toString();
 		String fromUserName = map.get("ToUserName").toString();
 		String createTime = map.get("CreateTime").toString();
+		// TODO 可选属性的初期化
 		switch (msgTypeEnum) {
 		case text:
 			formatStr = getFormatStr("/format/text.xml");
@@ -83,14 +160,12 @@ public class MessageHandlerUtils {
 			String vcMediaId = map.get("MediaId").toString();
 			returnMsg = String.format(formatStr, toUserName, fromUserName, createTime, vcMediaId);
 			break;
-		case video:
+		case video:// 问题不明
 			formatStr = getFormatStr("/format/video.xml");
 			String vdMediaId = map.get("MediaId").toString();
-			String thumbMediaId = map.get("ThumbMediaId").toString();
-			String vTitle = map.get("Title").toString();
-			String vDescription = map.get("Description").toString();
-			returnMsg = String.format(formatStr, toUserName, fromUserName, createTime, vdMediaId, thumbMediaId, vTitle,
-					vDescription);
+			String vTitle = "123";
+			String vDescription = "4556";
+			returnMsg = String.format(formatStr, toUserName, fromUserName, createTime, vdMediaId, vTitle, vDescription);
 			break;
 		case music:
 			formatStr = getFormatStr("/format/music.xml");
@@ -116,53 +191,16 @@ public class MessageHandlerUtils {
 
 	private String getFormatStr(String location) {
 		final int beginIndex = 39;
-		InputStream is = getClass().getResourceAsStream(location);
-		String formatStr = getDocument(is).asXML();
-		int endIndex = formatStr.length();
-		return formatStr.substring(beginIndex, endIndex).replaceAll("[\\s]", "");
-	}
-
-	public void resolveAcceptMsg(Map<String, Object> map) {
-		AcceptMsgType msgType = AcceptMsgType.valueOf(map.get("MsgType").toString());
-		switch (msgType) {
-		case text:
-			break;
-		case image:
-			break;
-		case voice:
-			break;
-		case video:
-			break;
-		case shortvideo:
-			break;
-		case location:
-			break;
-		case link:
-			break;
-		case event:
-			break;
-		default:
-			break;
+		InputStream is;
+		try {
+			is = getClass().getResourceAsStream(location);
+			String formatStr = getDocument(is).asXML();
+			int endIndex = formatStr.length();
+			is.close();
+			return formatStr.substring(beginIndex, endIndex).replaceAll("[\\s]", "");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	}
-
-	public enum AcceptMsgType {
-		text, // 文本
-		image, // 图片
-		voice, // 语音
-		video, // 视频
-		shortvideo, // 小视频
-		location, // 位置
-		link, // 链接
-		event// 事件
-	}
-
-	public enum SendMsgType {
-		text, // 文本
-		image, // 图片
-		voice, // 语音
-		video, // 视频
-		music, // 音乐
-		news, // 图文消息
+		return "";
 	}
 }
