@@ -21,7 +21,7 @@ public class ConnectHandlerUtils {
 	 *            微信公众号服务器转发的服务器消息
 	 * @return true 微信公众号服务器与servlet服务器通信成功 false 微信公众号服务器与servlet服务器通信失败
 	 */
-	public static boolean wechatConnectionVaildate(String token) {
+	public static boolean wechatConnectVaildate(String token) {
 		String signature = WechatConfigInfo.signature;// 微信加密签名
 		String timestamp = WechatConfigInfo.timestamp;// 时间戳
 		String nonce = WechatConfigInfo.nonce;// 随机数

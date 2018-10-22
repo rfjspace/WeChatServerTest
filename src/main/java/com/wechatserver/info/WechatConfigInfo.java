@@ -14,9 +14,5 @@ public class WechatConfigInfo {
 	public static String nonce;
 	public static String token;
 	public static String encodingAESKey;
-
 	public static String accessToken;
-	public static int expiresin;
-	// 微信公众平台acces_token的API接口
-	public static final String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 }

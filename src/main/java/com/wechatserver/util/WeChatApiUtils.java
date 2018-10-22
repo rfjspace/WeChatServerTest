@@ -33,14 +33,17 @@ import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.wechatserver.info.WechatConfigInfo;
 
-public class WeChatApiUtil {
+public class WeChatApiUtils {
 	// token 接口(GET)
 	private static final String ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 	// 素材上传(POST)https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE
 	private static final String UPLOAD_MEDIA = "https://api.weixin.qq.com/cgi-bin/media/upload";
 	// 素材下载:不支持视频文件的下载(GET)
 	private static final String DOWNLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
+	// 创建自定义菜单
+	private static final String MENU_CREATE = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
 
 	public static String getTokenUrl(String appId, String appSecret) {
 		return String.format(ACCESS_TOKEN, appId, appSecret);
@@ -48,6 +51,57 @@ public class WeChatApiUtil {
 
 	public static String getDownloadUrl(String token, String mediaId) {
 		return String.format(DOWNLOAD_MEDIA, token, mediaId);
+	}
+
+	/***
+	 * 创建自定义菜单
+	 * 
+	 * @param postData
+	 *            自定义菜单
+	 */
+	public static void createCustomMenu(String postData) {
+		String menuUrl = String.format(MENU_CREATE, WechatConfigInfo.accessToken);
+		String reponseMsg = WeChatApiUtils.httpsRequestToString(menuUrl, "POST", postData);
+		JSONObject json = JSON.parseObject(reponseMsg);
+		if ("ok".equals(json.getString("errmsg"))) {
+			System.out.println("菜单创建成功");
+		} else {
+			System.out.println("菜单创建失败");
+		}
+	}
+
+	/***
+	 * 用于获取accessToken的
+	 * 
+	 * @param appId
+	 * @param appSecret
+	 */
+	public synchronized static void getWeChatToken(String appId, String appSecret) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						// 获取accessToken
+						String accessToken = WeChatApiUtils.getToken(appId, appSecret);
+						// 获取成功
+						if (null != accessToken) { // 获取成功
+							// 获取到access_token 休眠7000秒,大约2个小时
+							WechatConfigInfo.accessToken = accessToken;
+							System.out.println("accessToken : " + accessToken);
+							Thread.sleep(7000 * 1000);
+
+						} else { // 获取失败
+							// 获取的access_token为空 休眠3秒
+							System.out.println("AccessToken获取失败");
+							Thread.sleep(3 * 1000);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 	/**
@@ -63,7 +117,7 @@ public class WeChatApiUtil {
 		}
 
 		String token = null;
-		String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
+		String tockenUrl = WeChatApiUtils.getTokenUrl(appId, appSecret);
 		String response = httpsRequestToString(tockenUrl, "GET", null);
 		JSONObject jsonObject = JSON.parseObject(response);
 		if (null != jsonObject) {
@@ -159,7 +213,7 @@ public class WeChatApiUtil {
 	public static File downloadMedia(String fileName, String mediaId) {
 		String appId = "wxbe4d433e857e8bb1";
 		String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
-		String token = WeChatApiUtil.getToken(appId, appSecret);
+		String token = WeChatApiUtils.getToken(appId, appSecret);
 		return downloadMedia(fileName, token, mediaId);
 	}
 
@@ -243,7 +297,7 @@ public class WeChatApiUtil {
 		File f = new File(filePath); // 获取本地文件
 		String appId = "wxbe4d433e857e8bb1";
 		String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
-		String token = WeChatApiUtil.getToken(appId, appSecret);
+		String token = WeChatApiUtils.getToken(appId, appSecret);
 		JSONObject jsonObject = uploadMedia(f, token, type);
 		return jsonObject;
 	}
@@ -315,28 +369,6 @@ public class WeChatApiUtil {
 		}
 		return response;
 	}
-
-	/*public static void main(String[] args) throws Exception {
-		// 媒体文件路径
-		String filePath = "D:/JavaSoftwareDevelopeFolder/IntelliJ IDEA_Workspace/WxStudy/web/media/image/我.jpg";
-		// String filePath = "D:/JavaSoftwareDevelopeFolder/IntelliJ
-		// IDEA_Workspace/WxStudy/web/media/voice/voice.mp3";
-		// String filePath = "D:\\JavaSoftwareDevelopeFolder\\IntelliJ
-		// IDEA_Workspace\\WxStudy\\web\\media\\video\\小苹果.mp4";
-		// 媒体文件类型
-		String type = "image";
-		// String type = "voice";
-		// String type = "video";
-		JSONObject uploadResult = uploadMedia(filePath, type);
-		// {"media_id":"dSQCiEHYB-pgi7ib5KpeoFlqpg09J31H28rex6xKgwWrln3HY0BTsoxnRV-xC_SQ","created_at":1455520569,"type":"image"}
-		System.out.println(uploadResult.toString());
-
-		// 下载刚刚上传的图片以id命名
-		String media_id = uploadResult.getString("media_id");
-		File file = downloadMedia("D:/" + media_id + ".png", media_id);
-		System.out.println(file.getName());
-
-	}*/
 }
 
 class JEEWeiXinX509TrustManager implements X509TrustManager {
@@ -349,4 +381,24 @@ class JEEWeiXinX509TrustManager implements X509TrustManager {
 	public X509Certificate[] getAcceptedIssuers() {
 		return null;
 	}
+	/*
+	 * public static void main(String[] args) throws Exception { // 媒体文件路径 String
+	 * filePath =
+	 * "D:/JavaSoftwareDevelopeFolder/IntelliJ IDEA_Workspace/WxStudy/web/media/image/我.jpg"
+	 * ; // String filePath = "D:/JavaSoftwareDevelopeFolder/IntelliJ //
+	 * IDEA_Workspace/WxStudy/web/media/voice/voice.mp3"; // String filePath =
+	 * "D:\\JavaSoftwareDevelopeFolder\\IntelliJ //
+	 * IDEA_Workspace\\WxStudy\\web\\media\\video\\小苹果.mp4"; // 媒体文件类型 String type =
+	 * "image"; // String type = "voice"; // String type = "video"; JSONObject
+	 * uploadResult = uploadMedia(filePath, type); // {"media_id":
+	 * "dSQCiEHYB-pgi7ib5KpeoFlqpg09J31H28rex6xKgwWrln3HY0BTsoxnRV-xC_SQ",
+	 * "created_at":1455520569,"type":"image"}
+	 * System.out.println(uploadResult.toString());
+	 * 
+	 * // 下载刚刚上传的图片以id命名 String media_id = uploadResult.getString("media_id"); File
+	 * file = downloadMedia("D:/" + media_id + ".png", media_id);
+	 * System.out.println(file.getName());
+	 * 
+	 * }
+	 */
 }

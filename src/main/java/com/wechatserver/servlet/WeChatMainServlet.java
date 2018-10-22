@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.wechatserver.info.AcceptMsgType;
 import com.wechatserver.info.SendMsgType;
 import com.wechatserver.info.WechatConfigInfo;
-import com.wechatserver.util.AccessTokenUtils;
 import com.wechatserver.util.ConnectHandlerUtils;
 import com.wechatserver.util.MsgHandlerUtils;
 import com.wechatserver.util.PropertiesLoadUtils;
+import com.wechatserver.util.WeChatApiUtils;
 
 @WebServlet(name = "WeChatMainServlet", urlPatterns = "/WeChatMainServlet", loadOnStartup = 1)
 public class WeChatMainServlet extends HttpServlet {
@@ -33,12 +33,8 @@ public class WeChatMainServlet extends HttpServlet {
 		WechatConfigInfo.token = proper.getProperty("token");
 		WechatConfigInfo.encodingAESKey = proper.getProperty("encodingAESKey");
 		// 获取微信公众号接口权限
-		AccessTokenUtils.getWeChatPermission(WechatConfigInfo.appId, WechatConfigInfo.appSecret);
+		WeChatApiUtils.getWeChatToken(WechatConfigInfo.appId, WechatConfigInfo.appSecret);
 
-		System.out.println("appId : " + WechatConfigInfo.appId);
-		System.out.println("appSecret : " + WechatConfigInfo.appSecret);
-		System.out.println("token : " + WechatConfigInfo.token);
-		System.out.println("encodingAESKey : " + WechatConfigInfo.encodingAESKey);
 	}
 
 	@Override
@@ -47,7 +43,7 @@ public class WeChatMainServlet extends HttpServlet {
 		WechatConfigInfo.signature = req.getParameter("signature");
 		WechatConfigInfo.timestamp = req.getParameter("timestamp");
 		WechatConfigInfo.nonce = req.getParameter("nonce");
-		if (ConnectHandlerUtils.wechatConnectionVaildate(WechatConfigInfo.token)) {
+		if (ConnectHandlerUtils.wechatConnectVaildate(WechatConfigInfo.token)) {
 			resp.getWriter().write(req.getParameter("echostr"));
 		} else {
 			System.out.println("与微信平台连接失败");
@@ -56,6 +52,23 @@ public class WeChatMainServlet extends HttpServlet {
 		System.out.println("signature : " + WechatConfigInfo.signature);
 		System.out.println("timestamp : " + WechatConfigInfo.timestamp);
 		System.out.println("nonce : " + WechatConfigInfo.nonce);
+
+		System.out.println("appId : " + WechatConfigInfo.appId);
+		System.out.println("appSecret : " + WechatConfigInfo.appSecret);
+		System.out.println("token : " + WechatConfigInfo.token);
+		System.out.println("encodingAESKey : " + WechatConfigInfo.encodingAESKey);
+		String menuData = " {\n" + "     \"button\":[\n" + "     {    \n" + "          \"type\":\"click\",\n"
+				+ "          \"name\":\"今日歌曲\",\n" + "          \"key\":\"V1001_TODAY_MUSIC\"\n" + "      },\n"
+				+ "      {\n" + "           \"name\":\"菜单\",\n" + "           \"sub_button\":[\n" + "           {    \n"
+				+ "               \"type\":\"view\",\n" + "               \"name\":\"搜索\",\n"
+				+ "               \"url\":\"http://www.soso.com/\"\n" + "            },\n" + "            {\n"
+				+ "                 \"type\":\"miniprogram\",\n" + "                 \"name\":\"wxa\",\n"
+				+ "                 \"url\":\"http://mp.weixin.qq.com\",\n"
+				+ "                 \"appid\":\"wx286b93c14bbf93aa\",\n"
+				+ "                 \"pagepath\":\"pages/lunar/index\"\n" + "             },\n" + "            {\n"
+				+ "               \"type\":\"click\",\n" + "               \"name\":\"赞一下我们\",\n"
+				+ "               \"key\":\"V1001_GOOD\"\n" + "            }]\n" + "       }]\n" + " }";
+		WeChatApiUtils.createCustomMenu(menuData);
 	}
 
 	@Override
@@ -64,7 +77,7 @@ public class WeChatMainServlet extends HttpServlet {
 		String result = "";
 		MsgHandlerUtils mhu = new MsgHandlerUtils();
 		Map<String, Object> map = mhu.msgParse(req.getInputStream());
-		AcceptMsgType msgType = AcceptMsgType.valueOf(map.get("MsgType").toString());
+		AcceptMsgType msgType = AcceptMsgType.valueOf(map.get("MsgType").toString().toUpperCase());
 		switch (msgType) {
 		case TEXT:
 			map.put("Content", "你说：" + map.get("Content"));
