@@ -12,7 +12,7 @@ import com.wechatserver.info.WechatConfigInfo;
  * @author Administrator
  *
  */
-public class ConnectionHandlerUtils {
+public class ConnectHandlerUtils {
 
 	/**
 	 * 微信公众号服务器转发请求的验证

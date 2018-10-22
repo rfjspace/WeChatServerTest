@@ -1,7 +1,6 @@
 package com.wechatserver.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
@@ -16,8 +15,7 @@ import com.wechatserver.info.AcceptMsgType;
 import com.wechatserver.info.SendMsgType;
 import com.wechatserver.info.WechatConfigInfo;
 import com.wechatserver.util.AccessTokenUtils;
-import com.wechatserver.util.ConnectionHandlerUtils;
-import com.wechatserver.util.MsgCryptionUtils;
+import com.wechatserver.util.ConnectHandlerUtils;
 import com.wechatserver.util.MsgHandlerUtils;
 import com.wechatserver.util.PropertiesLoadUtils;
 
@@ -49,7 +47,7 @@ public class WeChatMainServlet extends HttpServlet {
 		WechatConfigInfo.signature = req.getParameter("signature");
 		WechatConfigInfo.timestamp = req.getParameter("timestamp");
 		WechatConfigInfo.nonce = req.getParameter("nonce");
-		if (ConnectionHandlerUtils.wechatConnectionVaildate(WechatConfigInfo.token)) {
+		if (ConnectHandlerUtils.wechatConnectionVaildate(WechatConfigInfo.token)) {
 			resp.getWriter().write(req.getParameter("echostr"));
 		} else {
 			System.out.println("与微信平台连接失败");
@@ -65,42 +63,42 @@ public class WeChatMainServlet extends HttpServlet {
 		this.setGeneralAttributes(req, resp);
 		String result = "";
 		MsgHandlerUtils mhu = new MsgHandlerUtils();
-		InputStream inSt = req.getInputStream();
-		Map<String, Object> map = mhu.msgParse(inSt);
-		inSt.close();
+		Map<String, Object> map = mhu.msgParse(req.getInputStream());
 		AcceptMsgType msgType = AcceptMsgType.valueOf(map.get("MsgType").toString());
 		switch (msgType) {
-		case text:
+		case TEXT:
 			map.put("Content", "你说：" + map.get("Content"));
-			result = mhu.buildReturnMsg(map, SendMsgType.text);
+			result = mhu.buildReponseMsg(map, SendMsgType.TEXT);
 			break;
-		case image:
-			result = mhu.buildReturnMsg(map, SendMsgType.image);
+		case IMAGE:
+			result = mhu.buildReponseMsg(map, SendMsgType.IMAGE);
 			break;
-		case voice:
-			result = mhu.buildReturnMsg(map, SendMsgType.voice);
+		case VOICE:
+			result = mhu.buildReponseMsg(map, SendMsgType.VOICE);
 			break;
-		case video:
-		case shortvideo:
-			result = mhu.buildReturnMsg(map, SendMsgType.video);
+		case VIDEO:
+		case SHORTVIDEO:
+			result = mhu.buildReponseMsg(map, SendMsgType.VIDEO);
 			break;
-		case location:
+		case LOCATION:
 			map.put("Content", "Location_X：" + map.get("Location_X") + "\n" + "Location_Y：" + map.get("Location_Y"));
-			result = mhu.buildReturnMsg(map, SendMsgType.text);
+			result = mhu.buildReponseMsg(map, SendMsgType.TEXT);
 			break;
-		case link:
+		case LINK:
 			map.put("Content", "Link_URL：" + map.get("Url"));
-			result = mhu.buildReturnMsg(map, SendMsgType.text);
+			result = mhu.buildReponseMsg(map, SendMsgType.TEXT);
 			break;
-		case event:
+		case EVENT:
 			map.put("Content", "Event_Type：" + map.get("Event"));
-			result = mhu.buildReturnMsg(map, SendMsgType.text);
+			result = mhu.buildReponseMsg(map, SendMsgType.TEXT);
 			break;
 		default:
+			map.put("Content", "我不是很懂你想做什么。。");
+			result = mhu.buildReponseMsg(map, SendMsgType.TEXT);
 			break;
 		}
 		if ("Encrypt".equals(mhu.cryptFlg)) {
-			result = MsgCryptionUtils.msgEncrypt(result);
+			result = mhu.msgEncrypt(result);
 		}
 		resp.getWriter().println(result);
 
