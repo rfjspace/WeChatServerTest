@@ -1,9 +1,7 @@
 package com.wechatserver.util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +25,6 @@ public class TestMsgCryptionUtils {
 		WechatConfigInfo.nonce = "xxxxxx";
 		WechatConfigInfo.appId = "wxb11529c136998cb6";
 
-		MsgHandlerUtils mhu = new MsgHandlerUtils();
 		String replyMsg = "<xml>" + "	<ToUserName><![CDATA[123]]></ToUserName>"
 				+ "	<FromUserName><![CDATA[456]]></FromUserName>" + "	<CreateTime>789</CreateTime>"
 				+ "	<MsgType><![CDATA[text]]></MsgType>" + "	<Content><![CDATA[123456789]]></Content>" + "</xml>";

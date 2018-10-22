@@ -1,8 +1,5 @@
 package com.wechatserver.util;
 
-import java.io.InputStream;
-import java.util.Map;
-
 import com.wechatserver.info.WechatConfigInfo;
 import com.wechatserver.wxapi.AesException;
 import com.wechatserver.wxapi.WXBizMsgCrypt;

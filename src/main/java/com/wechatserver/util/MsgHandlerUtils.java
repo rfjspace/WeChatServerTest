@@ -82,6 +82,7 @@ public class MsgHandlerUtils {
 		// 得到xml根元素
 		Element root = document.getRootElement();
 		// 得到根元素的所有子节点
+		@SuppressWarnings("unchecked")
 		List<Element> elementList = root.elements();
 		// 遍历所有子节点
 		for (Element e : elementList) {
