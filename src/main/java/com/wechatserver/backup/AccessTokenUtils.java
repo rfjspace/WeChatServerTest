@@ -1,8 +1,6 @@
 package com.wechatserver.backup;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.wechatserver.info.WechatConfigInfo;
+import com.wechatserver.info.GlobalVariables;
 
 /***
  * 获取access_token工具类
@@ -26,9 +24,9 @@ public class AccessTokenUtils {
 						// 获取accessToken
 						AccessTokenUtils.getAccessToken(appId, appSecret);
 						// 获取成功
-						if (WechatConfigInfo.accessToken != null) { // 获取成功
+						if (GlobalVariables.accessToken != null) { // 获取成功
 							// 获取到access_token 休眠7000秒,大约2个小时
-							System.out.println("accessToken : " + WechatConfigInfo.accessToken);
+							System.out.println("accessToken : " + GlobalVariables.accessToken);
 							// System.out.println("expiresin : " + WechatConfigInfo.expiresin);
 							Thread.sleep(7000 * 1000);
 

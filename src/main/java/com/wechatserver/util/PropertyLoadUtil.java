@@ -3,13 +3,12 @@ package com.wechatserver.util;
 import java.io.InputStream;
 import java.util.Properties;
 
-/***
- * 读取Properties文件工具类
+/**
+ * ClassName: PropertyLoadUtil
  * 
- * @author Administrator
- *
+ * @Description: 读取Properties工具类
  */
-public class PropertiesLoadUtils {
+public class PropertyLoadUtil {
 	/***
 	 * Properties文件读取
 	 * 
@@ -17,7 +16,7 @@ public class PropertiesLoadUtils {
 	 *            文件所在位置（ClassPath）
 	 * @return Properties类
 	 */
-	public Properties propertiesLoad(String location) {
+	public Properties load(String location) {
 		InputStream in;
 		Properties proper = new Properties();
 		try {
