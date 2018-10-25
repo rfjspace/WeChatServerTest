@@ -23,6 +23,11 @@ public class CryptionUtil {
 		try {
 			WXBizMsgCrypt crypt = new WXBizMsgCrypt(GlobalVariables.token, GlobalVariables.encodingAESKey,
 					GlobalVariables.appId);
+			// TODO CryptMessage转换为String
+			// CryptMessage entry = new CryptMessage();
+			// entry.setToUserName("toUser");
+			// entry.setEncrypt("%1$s");
+			// String xmlFormat = XStreamUtil.toXML(entry);
 			String xmlFormat = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>";
 			String fromXML = String.format(xmlFormat, encrypt);
 			return crypt.decryptMsg(msgSignature, GlobalVariables.timestamp, GlobalVariables.nonce, fromXML);
@@ -50,33 +55,32 @@ public class CryptionUtil {
 		}
 		return "";
 	}
+}
 
-	/**
-	 * ClassName: CryptMessage
-	 * 
-	 * @Description: 加密消息
-	 */
-	@SuppressWarnings("unused")
-	private class CryptMessage {
-		// 接收方帐号（收到的 OpenID）
-		private String ToUserName;
-		// 密文
-		private String Encrypt;
+/**
+ * ClassName: CryptMessage
+ * 
+ * @Description: 加密消息
+ */
+class CryptMessage {
+	// 接收方帐号（收到的 OpenID）
+	private String ToUserName;
+	// 密文
+	private String Encrypt;
 
-		public String getToUserName() {
-			return ToUserName;
-		}
+	public String getToUserName() {
+		return ToUserName;
+	}
 
-		public void setToUserName(String toUserName) {
-			ToUserName = toUserName;
-		}
+	public void setToUserName(String toUserName) {
+		ToUserName = toUserName;
+	}
 
-		public String getEncrypt() {
-			return Encrypt;
-		}
+	public String getEncrypt() {
+		return Encrypt;
+	}
 
-		public void setEncrypt(String encrypt) {
-			Encrypt = encrypt;
-		}
+	public void setEncrypt(String encrypt) {
+		Encrypt = encrypt;
 	}
 }

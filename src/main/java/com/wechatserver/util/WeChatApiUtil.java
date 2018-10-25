@@ -126,7 +126,7 @@ public class WeChatApiUtil {
 				GlobalVariables.accessToken = token;
 				GlobalVariables.expires_in = expires_in;
 			} catch (JSONException e) {
-				token = null;// 获取token失败
+				token = "";// 获取token失败
 			}
 		}
 		return token;
@@ -292,7 +292,6 @@ public class WeChatApiUtil {
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 			sslContext.init(null, tm, new java.security.SecureRandom());
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
-			System.out.println(path);
 			URL url = new URL(path);
 			conn = (HttpsURLConnection) url.openConnection();
 			conn.setSSLSocketFactory(ssf);
