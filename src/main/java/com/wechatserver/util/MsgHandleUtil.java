@@ -1,6 +1,8 @@
 package com.wechatserver.util;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+
+import com.wechatserver.entry.message.response.TextMessage;
 
 /**
  * ClassName: MsgHandleUtil
@@ -229,15 +233,22 @@ public class MsgHandleUtil {
 	 *            要返回的数据类型
 	 * @return 将要的返回消息
 	 */
-	public String buildRespMsg(Map<String, String> map, String msgType) {
-		String returnMsg = "";
-		// String formatStr = "";// 返回消息的格式字串
-		// String toUserName = map.get("FromUserName").toString();
-		// String fromUserName = map.get("ToUserName").toString();
-		// String createTime = map.get("CreateTime").toString();
+	public String buildRespMsg(Map<String, Object> map, String msgType) {
+		String respMsg = "";
+		String toUserName = map.get("FromUserName").toString();
+		String fromUserName = map.get("ToUserName").toString();
+		SimpleDateFormat format = new SimpleDateFormat("yyyymmddHHmmss");
+		Long createTime = Long.parseLong(format.format(new Date()));
+		//TODO 将数据库消息集合转化为XML消息，或者直接将select的实体类转换？DB结构？
 		switch (msgType) {
 		case RESP_MESSAGE_TYPE_TEXT:
-			// formatStr = getFormatStr("/format/text.xml");
+			TextMessage tm = new TextMessage();
+			tm.setToUserName(toUserName);
+			tm.setFromUserName(fromUserName);
+			tm.setCreateTime(createTime);
+			tm.setMsgType(RESP_MESSAGE_TYPE_TEXT);
+			tm.setContent(map.get("Content").toString());
+			respMsg = XStreamUtil.toXML(tm);
 			break;
 		case RESP_MESSAGE_TYPE_IMAGE:
 			break;
@@ -252,7 +263,7 @@ public class MsgHandleUtil {
 		default:
 			break;
 		}
-		return returnMsg;
+		return respMsg;
 	}
 
 	// private String getFormatStr(String location) {

@@ -30,7 +30,7 @@ public class GlobalVariables {
 	}
 
 	public static void infoPrint() {
-		logger.info("appId : " + appId + "\n" + "appSecret : " + appSecret + "\n" + "signature : " + signature + "\n"
+		logger.info("\n"+"appId : " + appId + "\n" + "appSecret : " + appSecret + "\n" + "signature : " + signature + "\n"
 				+ "timestamp : " + timestamp + "\n" + "nonce : " + nonce + "\n" + "token : " + token + "\n"
 				+ "encodingAESKey : " + encodingAESKey + "\n" + "accessToken : " + accessToken + "\n" + "expires_in : "
 				+ expires_in);

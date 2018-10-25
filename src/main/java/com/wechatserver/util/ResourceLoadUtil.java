@@ -1,6 +1,8 @@
 package com.wechatserver.util;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Properties;
  * 
  * @Description: 读取Properties工具类
  */
-public class PropertyLoadUtil {
+public class ResourceLoadUtil {
 	/***
 	 * Properties文件读取
 	 * 
@@ -16,7 +18,7 @@ public class PropertyLoadUtil {
 	 *            文件所在位置（ClassPath）
 	 * @return Properties类
 	 */
-	public Properties load(String location) {
+	public Properties propertyLoad(String location) {
 		InputStream in;
 		Properties proper = new Properties();
 		try {
@@ -29,4 +31,8 @@ public class PropertyLoadUtil {
 		return proper;
 	}
 
+	public File fileLoad(String location) {
+		URL url = getClass().getResource(location);
+		return new File(url.getFile());
+	}
 }

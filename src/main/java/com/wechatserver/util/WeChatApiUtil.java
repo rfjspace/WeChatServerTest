@@ -110,7 +110,7 @@ public class WeChatApiUtil {
 	 * @param appSecret
 	 * @return
 	 */
-	private static synchronized String getToken(String appId, String appSecret) {
+	public static synchronized String getToken(String appId, String appSecret) {
 		if (appId == null || appSecret == null) {
 			return null;
 		}
@@ -126,10 +126,20 @@ public class WeChatApiUtil {
 				GlobalVariables.accessToken = token;
 				GlobalVariables.expires_in = expires_in;
 			} catch (JSONException e) {
-				token = null;// 获取token失败
+				token = "";// 获取token失败
 			}
 		}
 		return token;
+	}
+
+	public static String getUploadMediaId(File file, String type) {
+		String mediaId = null;
+		JSONObject jsonObject = uploadMedia(file, GlobalVariables.accessToken, type);
+		mediaId = jsonObject.getString("media_id");
+		if (mediaId == null) {
+			mediaId = "";
+		}
+		return mediaId;
 	}
 
 	/**
@@ -155,6 +165,7 @@ public class WeChatApiUtil {
 
 		String url = UPLOAD_MEDIA;
 		JSONObject jsonObject = null;
+
 		PostMethod post = new PostMethod(url);
 		post.setRequestHeader("Connection", "Keep-Alive");
 		post.setRequestHeader("Cache-Control", "no-cache");
@@ -292,7 +303,6 @@ public class WeChatApiUtil {
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 			sslContext.init(null, tm, new java.security.SecureRandom());
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
-			System.out.println(path);
 			URL url = new URL(path);
 			conn = (HttpsURLConnection) url.openConnection();
 			conn.setSSLSocketFactory(ssf);

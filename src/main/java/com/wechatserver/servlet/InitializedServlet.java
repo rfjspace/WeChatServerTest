@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 import com.wechatserver.info.GlobalVariables;
-import com.wechatserver.util.PropertyLoadUtil;
+import com.wechatserver.util.ResourceLoadUtil;
 import com.wechatserver.util.WeChatApiUtil;
 
 /**
@@ -24,7 +24,7 @@ public class InitializedServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		String location = "/GlobalVariables.properties";
-		Properties prop = new PropertyLoadUtil().load(location);
+		Properties prop = new ResourceLoadUtil().propertyLoad(location);
 		GlobalVariables.init(prop);
 		WeChatApiUtil.getWeChatToken(GlobalVariables.appId, GlobalVariables.appSecret);
 	}
