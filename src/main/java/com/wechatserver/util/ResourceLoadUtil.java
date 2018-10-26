@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * ClassName: PropertyLoadUtil
  * 
- * @Description: 读取Properties工具类
+ * @Description: 资源文件读取工具类
  */
 public class ResourceLoadUtil {
 	/***
@@ -31,6 +31,13 @@ public class ResourceLoadUtil {
 		return proper;
 	}
 
+	/***
+	 * File文件读取
+	 * 
+	 * @param location
+	 *            文件所在位置（ClassPath）
+	 * @return
+	 */
 	public File fileLoad(String location) {
 		URL url = getClass().getResource(location);
 		return new File(url.getFile());

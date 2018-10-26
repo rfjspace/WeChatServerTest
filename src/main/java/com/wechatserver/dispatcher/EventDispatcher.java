@@ -1,16 +1,12 @@
 package com.wechatserver.dispatcher;
 
-<<<<<<< HEAD
 import java.io.File;
-=======
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 import com.wechatserver.entry.menu.ButtonKeys;
 import com.wechatserver.entry.message.response.Article;
 import com.wechatserver.entry.message.response.Image;
@@ -23,17 +19,9 @@ import com.wechatserver.entry.message.response.Video;
 import com.wechatserver.entry.message.response.VideoMessage;
 import com.wechatserver.entry.message.response.Voice;
 import com.wechatserver.entry.message.response.VoiceMessage;
-=======
-import com.wechatserver.entry.message.response.Article;
-import com.wechatserver.entry.message.response.NewsMessage;
-import com.wechatserver.entry.message.response.TextMessage;
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 import com.wechatserver.util.MsgHandleUtil;
-<<<<<<< HEAD
 import com.wechatserver.util.ResourceLoadUtil;
 import com.wechatserver.util.WeChatApiUtil;
-=======
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 import com.wechatserver.util.XStreamUtil;
 
 /**
@@ -53,7 +41,6 @@ public class EventDispatcher {
 		switch (msgType) {
 
 		case MsgHandleUtil.EVENT_TYPE_SUBSCRIBE:// 关注事件
-<<<<<<< HEAD
 		{
 			TextMessage tm = new TextMessage();
 			tm.setToUserName(toUserName);
@@ -63,44 +50,24 @@ public class EventDispatcher {
 			tm.setContent("感谢关注，真好！");
 			return XStreamUtil.toXML(tm);
 		}
-=======
-			TextMessage tm = new TextMessage();
-			tm.setToUserName(toUserName);
-			tm.setFromUserName(fromUserName);
-			tm.setCreateTime(createTime);
-			tm.setMsgType(msgType);
-			tm.setContent("感谢关注，真好！");
-			return XStreamUtil.toXML(tm);
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 		case MsgHandleUtil.EVENT_TYPE_UNSUBSCRIBE:// 取消关注事件
-<<<<<<< HEAD
 		{
 			System.out.println("取消关注事件");
-=======
-			System.out.println(toUserName + "用户已经取消关注！");
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			break;
 		}
 		case MsgHandleUtil.EVENT_TYPE_SCAN:// 扫描二维码事件
-<<<<<<< HEAD
 		{
-=======
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			// TODO
 			System.out.println("扫描二维码事件");
 			break;
 		}
 		case MsgHandleUtil.EVENT_TYPE_LOCATION:// 位置上报事件
-<<<<<<< HEAD
 		{
-=======
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			// TODO
 			System.out.println("位置上报事件");
 			break;
 		}
 		case MsgHandleUtil.EVENT_TYPE_CLICK:// 自定义菜单点击事件
-<<<<<<< HEAD
 		{
 			String clickKey = map.get("EventKey");
 			switch (clickKey) {
@@ -110,7 +77,7 @@ public class EventDispatcher {
 				newsMsg.setFromUserName(fromUserName);
 				newsMsg.setCreateTime(createTime);
 				newsMsg.setMsgType("news");
-				newsMsg.setArticleCount(5);
+				newsMsg.setArticleCount(3);
 				List<Article> articles = new ArrayList<Article>();
 				Article art1 = new Article();
 				art1.setTitle("微信公众平台图片最合适尺寸大小01");
@@ -129,6 +96,8 @@ public class EventDispatcher {
 				art3.setPicUrl(
 						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
 				art3.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
+				articles.add(art3);
+				newsMsg.setArticles(articles);
 				return XStreamUtil.toXML(newsMsg);
 			case ButtonKeys.SUBBUTTON_KEYS_S032:// 客户服务
 				TextMessage serverKF = new TextMessage();
@@ -136,7 +105,7 @@ public class EventDispatcher {
 				serverKF.setToUserName(toUserName);
 				serverKF.setCreateTime(createTime);
 				serverKF.setMsgType("text");
-				serverKF.setContent("<a href=\"\">对不起，客服跑了！</a>");
+				serverKF.setContent("对不起，客服跑了！");
 				return XStreamUtil.toXML(serverKF);
 			case ButtonKeys.SUBBUTTON_KEYS_S021:// 文本测试
 				TextMessage textMsg = new TextMessage();
@@ -163,7 +132,7 @@ public class EventDispatcher {
 				return XStreamUtil.toXML(imageMsg);
 			case ButtonKeys.SUBBUTTON_KEYS_S023:// 音乐测试
 				File file02 = new ResourceLoadUtil().fileLoad("/images/image02.jpg");
-				String mediaId02 = WeChatApiUtil.getUploadMediaId(file02, "thumb");
+				String mediaId02 = WeChatApiUtil.getUploadMediaId(file02, "image");
 				MusicMessage musicMsg = new MusicMessage();
 				musicMsg.setFromUserName(fromUserName);
 				musicMsg.setToUserName(toUserName);
@@ -173,7 +142,7 @@ public class EventDispatcher {
 				music.setTitle("这座城市-蒋雪儿");
 				music.setMusicUrl("http://www.ytmp3.cn/down/54178.mp3");
 				music.setThumbMediaId(mediaId02);
-				music.setHQMusicUrl("");
+				music.setHQMusicUrl("http://www.ytmp3.cn/down/54178.mp3");
 				music.setDescription("音乐测试");
 				musicMsg.setMusic(music);
 				return XStreamUtil.toXML(musicMsg);
@@ -216,65 +185,8 @@ public class EventDispatcher {
 		case MsgHandleUtil.EVENT_TYPE_VIEW: // 自定义菜单View事件
 		{
 			System.out.println("自定义菜单 View 事件");
-=======
-			String clickKey = map.get("EventKey");
-			// newMsgBt.setKey("newMsgBt");
-			// serMsgBt.setKey("serMsgBt");
-			// textMsgBt.setKey("textMsgBt");
-			// imageMsgBt.setKey("imageMsgBt");
-			// musicMsgBt.setKey("musicMsgBt");
-			// videoMsgBt.setKey("videoMsgBt");
-			// voiceMsgBt.setKey("voiceMsgBt");
-			if ("newMsgBt".equals(clickKey)) {
-				NewsMessage newsMsg = new NewsMessage();
-				newsMsg.setToUserName(toUserName);
-				newsMsg.setFromUserName(fromUserName);
-				newsMsg.setCreateTime(createTime);
-				newsMsg.setMsgType("news");
-				newsMsg.setArticleCount(5);
-				List<Article> articles = new ArrayList<Article>();
-				Article art1 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小01");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art1);
-				Article art2 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小02");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art2);
-				Article art3 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小03");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art3);
-				Article art4 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小04");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art4);
-				Article art5 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小05");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art5);
-				newsMsg.setArticles(articles);
-				return XStreamUtil.toXML(newsMsg);
-			}
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			break;
-<<<<<<< HEAD
 		}
-=======
-		case MsgHandleUtil.EVENT_TYPE_VIEW: // 自定义菜单 View 事件
-			System.out.println("自定义菜单 View 事件");
-			break;
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 		default:
 			break;
 		}

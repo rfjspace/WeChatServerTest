@@ -14,10 +14,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wechatserver.dispatcher.EventDispatcher;
 import com.wechatserver.dispatcher.MsgDispatcher;
-<<<<<<< HEAD
 import com.wechatserver.entry.menu.ButtonKeys;
-=======
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 import com.wechatserver.entry.menu.ClickButton;
 import com.wechatserver.entry.menu.ViewButton;
 import com.wechatserver.info.GlobalVariables;
@@ -35,10 +32,12 @@ import com.wechatserver.util.WeChatApiUtil;
 public class MainProcessServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void init() throws ServletException {
 		super.init();
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 字符编码转换
@@ -60,7 +59,6 @@ public class MainProcessServlet extends HttpServlet {
 		ClickButton newMsgBt = new ClickButton();
 		newMsgBt.setName("最新消息");
 		newMsgBt.setType("click");
-<<<<<<< HEAD
 		newMsgBt.setKey(ButtonKeys.BUTTON_KEYS_F001);
 		ViewButton gwBt = new ViewButton();
 		gwBt.setName("官方网站");
@@ -90,37 +88,6 @@ public class MainProcessServlet extends HttpServlet {
 		voiceMsgBt.setName("语音测试");
 		voiceMsgBt.setType("click");
 		voiceMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S025);
-=======
-		newMsgBt.setKey("newMsgBt");
-		ClickButton serMsgBt = new ClickButton();
-		serMsgBt.setName("客户服务");
-		serMsgBt.setType("click");
-		serMsgBt.setKey("serMsgBt");
-		ViewButton gwBt = new ViewButton();
-		gwBt.setName("官方网站");
-		gwBt.setType("view");
-		gwBt.setUrl("https://www.baidu.com");
-		ClickButton textMsgBt = new ClickButton();
-		textMsgBt.setName("文本测试");
-		textMsgBt.setType("click");
-		textMsgBt.setKey("textMsgBt");
-		ClickButton imageMsgBt = new ClickButton();
-		imageMsgBt.setName("图片测试");
-		imageMsgBt.setType("click");
-		imageMsgBt.setKey("imageMsgBt");
-		ClickButton musicMsgBt = new ClickButton();
-		musicMsgBt.setName("音乐测试");
-		musicMsgBt.setType("click");
-		musicMsgBt.setKey("musicMsgBt");
-		ClickButton videoMsgBt = new ClickButton();
-		videoMsgBt.setName("视频测试");
-		videoMsgBt.setType("click");
-		videoMsgBt.setKey("videoMsgBt");
-		ClickButton voiceMsgBt = new ClickButton();
-		voiceMsgBt.setName("语音测试");
-		voiceMsgBt.setType("click");
-		voiceMsgBt.setKey("voiceMsgBt");
->>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 		// 创建菜单结构
 		JSONArray sub_button = new JSONArray();
 		sub_button.add(textMsgBt);

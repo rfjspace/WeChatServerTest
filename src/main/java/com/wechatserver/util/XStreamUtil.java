@@ -53,7 +53,7 @@ public class XStreamUtil {
 		if (entryClass.getSimpleName().equals(NewsMessage.class.getSimpleName())) {
 			xStream.alias("item", Article.class);
 		}
-		return xStream.toXML(entry).replaceAll("[\\s]", "");
+		return xStream.toXML(entry);
 	}
 
 	/***
