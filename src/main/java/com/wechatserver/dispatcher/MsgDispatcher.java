@@ -15,32 +15,50 @@ public class MsgDispatcher {
 		String msgType = map.get("MsgType").toString();
 		switch (msgType) {
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_TEXT:// 文本消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("文本消息");
 			break;
 		}
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_IMAGE:// 图片消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("图片消息");
 			break;
 		}
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_LINK:// 链接消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("链接消息");
 			break;
 		}
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_LOCATION:// 位置消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("位置消息");
 			break;
 		}
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_VIDEO:// 视频消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("视频消息");
 			break;
 		}
 		case MsgHandleUtil.REQ_MESSAGE_TYPE_VOICE:// 语音消息
+<<<<<<< HEAD
 		{
+=======
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 			System.out.println("语音消息");
 			break;
 		}

@@ -12,6 +12,10 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+<<<<<<< HEAD
+=======
+import com.thoughtworks.xstream.XStream;
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 import com.wechatserver.entry.message.response.TextMessage;
 
 /**
