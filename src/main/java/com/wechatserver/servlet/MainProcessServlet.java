@@ -131,9 +131,9 @@ public class MainProcessServlet extends HttpServlet {
 		String msgType = map.get("MsgType").toString();
 		// 消息处理的分发
 		if (MsgHandleUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)) {
-			respMsg = EventDispatcher.processEvent(map); // 进入事件处理
+			respMsg = EventDispatcher.processEvent(map, resp); // 进入事件处理
 		} else {
-			respMsg = MsgDispatcher.processMessage(map); // 进入消息处理
+			respMsg = MsgDispatcher.processMessage(map, resp); // 进入消息处理
 		}
 		// 将响应消息加密
 		if ("Encrypt".equals(MsgHandleUtil.CRYPTFLG)) {

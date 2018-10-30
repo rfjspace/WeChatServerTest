@@ -2,6 +2,8 @@ package com.wechatserver.dispatcher;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.wechatserver.util.MsgHandleUtil;
 
 /**
@@ -10,7 +12,7 @@ import com.wechatserver.util.MsgHandleUtil;
  * @Description: 消息业务处理分发器
  */
 public class MsgDispatcher {
-	public static String processMessage(Map<String, String> map) {
+	public static String processMessage(Map<String, String> map, HttpServletResponse resp) {
 		// 获取消息类型
 		String msgType = map.get("MsgType").toString();
 		switch (msgType) {

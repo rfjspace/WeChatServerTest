@@ -1,11 +1,14 @@
 package com.wechatserver.dispatcher;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.wechatserver.entry.menu.ButtonKeys;
 import com.wechatserver.entry.message.response.Article;
@@ -30,7 +33,7 @@ import com.wechatserver.util.XStreamUtil;
  * @Description: 事件消息业务分发器
  */
 public class EventDispatcher {
-	public static String processEvent(Map<String, String> map) {
+	public static String processEvent(Map<String, String> map, HttpServletResponse resp) {
 		// 获取事件类型
 		String msgType = map.get("Event").toString();
 		// base消息
@@ -184,7 +187,17 @@ public class EventDispatcher {
 		}
 		case MsgHandleUtil.EVENT_TYPE_VIEW: // 自定义菜单View事件
 		{
-			System.out.println("自定义菜单 View 事件");
+			try {
+				boolean checkLogin = false;
+				if (checkLogin) {
+					resp.sendRedirect("/WeChatServerTest/login.jsp");
+				} else {
+					resp.sendRedirect("/WeChatServerTest/register.jsp");
+				}
+				System.out.println("自定义菜单 View 事件");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		}
 		default:
