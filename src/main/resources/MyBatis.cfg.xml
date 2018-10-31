@@ -23,6 +23,10 @@
 	<mappers>
 		<!-- 告知映射文件方式1，一个一个的配置 <mapper resource="com/cy/mybatis/mapper/UserMapper.xml"/> -->
 		<!-- 告知映射文件方式2，自动扫描包内的Mapper接口与配置文件 -->
+<<<<<<< HEAD
 		<package name="com.wechatserver.mapper" />
+=======
+		<package name="com/wechatserver/mapper/cfg" />
+>>>>>>> branch 'master' of https://github.com/rfjspace/WeChatServerTest.git
 	</mappers>
 </configuration>
