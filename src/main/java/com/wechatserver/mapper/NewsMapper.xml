@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.NewsMapper">
+	<resultMap id="NewsMap" type="com.wechatserver.entry.message.response.NewsMessage">
+		<result property="ToUserName" column="to_username"
+			javaType="java.lang.String"></result>
+		<result property="FromUserName" column="from_username"
+			javaType="java.lang.String"></result>
+		<result property="CreateTime" column="create_time"
+			javaType="java.lang.Long"></result>
+		<result property="MsgType" column="msg_type"
+			javaType="java.lang.String"></result>
+		<result property="ArticleCount" column="article_count"
+			javaType="java.lang.Integer"></result>
+		<collection property="Articles" ofType="com.wechatserver.entry.message.response.Article"
+			javaType="java.util.List">
+			<result property="Title" column="article_title"
+				javaType="java.lang.String"></result>
+			<result property="Description" column="article_description"
+				javaType="java.lang.String"></result>
+			<result property="PicUrl" column="article_picurl"
+				javaType="java.lang.String"></result>
+			<result property="Url" column="article_url"
+				javaType="java.lang.String"></result>
+		</collection>
+	</resultMap>
+	<select id="select" resultMap="NewsMap">
+		select * from
+		resp_message_news rn
+		left join resp_message_news_dtl rnd on rn.create_time = rnd.article_id
+		where to_username=#{arg0} and from_username=#{arg1}
+		and create_time=#{arg2};
+	</select>
+	<insert id="insert" parameterType="com.wechatserver.entry.message.response.NewsMessage">
+		insert into
+		resp_message_news(to_username,from_username,create_time,msg_type,article_count,article_id)
+		values(#{ToUserName},#{FromUserName},#{CreateTime},#{MsgType},#{ArticleCount},#{CreateTime});
+
+	</insert>
+</mapper>
