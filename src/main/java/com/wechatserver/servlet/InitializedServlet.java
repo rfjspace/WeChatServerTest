@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 import com.wechatserver.util.ResourceLoadUtil;
 import com.wechatserver.util.WeChatApiUtil;
 

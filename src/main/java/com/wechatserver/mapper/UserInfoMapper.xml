@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.UserInfoMapper">
+	<resultMap id="userInfoMap"
+		type="com.wechatserver.entry.info.UserInfo">
+		<result property="openId" column="open_id"
+			javaType="java.lang.String"></result>
+		<result property="nickName" column="nick_name"
+			javaType="java.lang.String"></result>
+		<result property="sex" column="sex" javaType="java.lang.Long"></result>
+		<result property="province" column="province"
+			javaType="java.lang.String"></result>
+		<result property="city" column="city"
+			javaType="java.lang.String"></result>
+		<result property="country" column="country"
+			javaType="java.lang.String"></result>
+		<result property="headImgurl" column="headimg_url"
+			javaType="java.lang.String"></result>
+		<result property="language" column="language"
+			javaType="java.lang.String"></result>
+		<result property="privilege" column="privilege"
+			javaType="java.lang.String"></result>
+		<result property="unionId" column="union_id"
+			javaType="java.lang.String"></result>
+	</resultMap>
+	<select id="selectByOpenId" resultMap="userInfoMap"
+		parameterType="java.lang.String">
+		select * from info_users iu where
+		iu.open_id=#{openId};
+	</select>
+	<insert id="insert"
+		parameterType="com.wechatserver.entry.info.UserInfo">
+		insert into
+		info_users(open_id,nick_name,sex,province,city,country,headimg_url,privilege,union_id,language)
+		values(#{openId},#{nickName},#{sex},#{province},#{city},#{country},#{headImgurl},#{privilege},#{unionId},#{language});
+	</insert>
+	<update id="updateByOpenId"
+		parameterType="com.wechatserver.entry.info.UserInfo">
+		update info_users iu set iu.nick_name=#{nickName},
+		iu.sex=#{sex},
+		iu.province=#{province}, iu.city=#{city},
+		iu.country=#{country},
+		iu.headimg_url=#{headImgurl},
+		iu.privilege=#{privilege},
+		iu.union_id=#{unionId},
+		iu.language=#{language}
+		where
+		iu.open_id=#{openId};
+	</update>
+</mapper>

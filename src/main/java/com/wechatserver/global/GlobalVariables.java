@@ -1,4 +1,4 @@
-package com.wechatserver.info;
+package com.wechatserver.global;
 
 import java.util.Properties;
 import java.util.logging.Logger;

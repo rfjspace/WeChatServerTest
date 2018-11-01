@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -33,7 +35,7 @@ import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 
 /**
  * ClassName: WeChatApiUtil
@@ -49,6 +51,78 @@ public class WeChatApiUtil {
 	private static final String DOWNLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
 	// 创建自定义菜单
 	private static final String MENU_CREATE = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
+	// 自定义菜单删除接口
+	private static final String MENU_DELETE = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s";
+	// 用户同意授权，获取code
+	private static final String SNSAPI_USERINFO = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+	// 网页授权access_token
+	private static final String AUTH_TOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
+	// 拉取用户信息
+	private static final String AUTH_INFO = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
+
+	/***
+	 * 拉取用户信息
+	 * 
+	 * @param code
+	 * @return
+	 * @throws Exception
+	 */
+	public static JSONObject getAuthInfo(String authToken, String openId) throws Exception {
+		String authInfoUrl = String.format(AUTH_INFO, authToken, openId);
+		JSONObject json = JSONObject.parseObject(WeChatApiUtil.httpsRequestToString(authInfoUrl, "GET", null));
+		if (null != json.get("errcode")) {
+			throw new Exception("拉取用户信息失败 ： " + json.get("errcode"));
+		}
+		System.out.println("拉取用户信息成功");
+		return json;
+	}
+
+	/***
+	 * 网页授权access_token
+	 * 
+	 * @param code
+	 * @return
+	 * @throws Exception
+	 */
+	public static JSONObject getAuthToken(String code) throws Exception {
+		String authTokenUrl = String.format(AUTH_TOKEN, GlobalVariables.appId, GlobalVariables.appSecret, code);
+		JSONObject json = JSONObject.parseObject(WeChatApiUtil.httpsRequestToString(authTokenUrl, "GET", null));
+		if (null != json.get("errcode")) {
+			throw new Exception("网页授权失败 ： " + json.get("errcode"));
+		}
+		System.out.println("网页授权成功");
+		return json;
+	}
+
+	/***
+	 * 用户同意授权Url
+	 */
+	public static String getUrlEncode(String url) {
+		String urlStr = null;
+		String snsapiUrl = null;
+		try {
+			// urlEncode 对链接进行处理
+			urlStr = URLEncoder.encode(url, "utf-8");
+			snsapiUrl = String.format(SNSAPI_USERINFO, GlobalVariables.appId, urlStr);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return snsapiUrl;
+	}
+
+	/***
+	 * 删除自定义菜单
+	 */
+	public static void deleteCustomMenu() {
+		String menuUrl = String.format(MENU_DELETE, GlobalVariables.accessToken);
+		String reponseMsg = WeChatApiUtil.httpsRequestToString(menuUrl, "POST", null);
+		JSONObject json = JSON.parseObject(reponseMsg);
+		if ("ok".equals(json.getString("errmsg"))) {
+			System.out.println("菜单删除成功");
+		} else {
+			System.out.println("菜单删除成功");
+		}
+	}
 
 	/***
 	 * 创建自定义菜单

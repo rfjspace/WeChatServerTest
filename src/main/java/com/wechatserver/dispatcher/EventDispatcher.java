@@ -3,15 +3,19 @@ package com.wechatserver.dispatcher;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.session.SqlSession;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wechatserver.entry.menu.ButtonKeys;
-import com.wechatserver.entry.message.response.Article;
+import com.wechatserver.entry.menu.ClickButton;
+import com.wechatserver.entry.menu.ViewButton;
 import com.wechatserver.entry.message.response.Image;
 import com.wechatserver.entry.message.response.ImageMessage;
 import com.wechatserver.entry.message.response.Music;
@@ -22,7 +26,9 @@ import com.wechatserver.entry.message.response.Video;
 import com.wechatserver.entry.message.response.VideoMessage;
 import com.wechatserver.entry.message.response.Voice;
 import com.wechatserver.entry.message.response.VoiceMessage;
+import com.wechatserver.mapper.RespNewsMapper;
 import com.wechatserver.util.MsgHandleUtil;
+import com.wechatserver.util.MybatisUtil;
 import com.wechatserver.util.ResourceLoadUtil;
 import com.wechatserver.util.WeChatApiUtil;
 import com.wechatserver.util.XStreamUtil;
@@ -33,13 +39,15 @@ import com.wechatserver.util.XStreamUtil;
  * @Description: 事件消息业务分发器
  */
 public class EventDispatcher {
-	public static String processEvent(Map<String, String> map, HttpServletResponse resp) {
+	public static String processEvent(Map<String, String> map) {
+		// 执行数据库操作的session
+		SqlSession sqlSession = MybatisUtil.getSession();
 		// 获取事件类型
 		String msgType = map.get("Event").toString();
 		// base消息
 		String toUserName = map.get("FromUserName").toString();
 		String fromUserName = map.get("ToUserName").toString();
-		SimpleDateFormat format = new SimpleDateFormat("yyyymmddHHmmss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmSSss");
 		Long createTime = Long.parseLong(format.format(new Date()));
 		switch (msgType) {
 
@@ -75,32 +83,11 @@ public class EventDispatcher {
 			String clickKey = map.get("EventKey");
 			switch (clickKey) {
 			case ButtonKeys.BUTTON_KEYS_F001:// 最新消息
-				NewsMessage newsMsg = new NewsMessage();
+				RespNewsMapper respNM = sqlSession.getMapper(RespNewsMapper.class);
+				NewsMessage newsMsg = respNM.selectLastNewsMessage();
 				newsMsg.setToUserName(toUserName);
 				newsMsg.setFromUserName(fromUserName);
-				newsMsg.setCreateTime(createTime);
-				newsMsg.setMsgType("news");
-				newsMsg.setArticleCount(3);
-				List<Article> articles = new ArrayList<Article>();
-				Article art1 = new Article();
-				art1.setTitle("微信公众平台图片最合适尺寸大小01");
-				art1.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art1.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art1);
-				Article art2 = new Article();
-				art2.setTitle("微信公众平台图片最合适尺寸大小02");
-				art2.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art2.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art2);
-				Article art3 = new Article();
-				art3.setTitle("微信公众平台图片最合适尺寸大小03");
-				art3.setPicUrl(
-						"https://imgsa.baidu.com/exp/w=500/sign=6f5c5be5d91b0ef46ce8985eedc651a1/78310a55b319ebc47cdb65528926cffc1f17165d.jpg");
-				art3.setUrl("https://jingyan.baidu.com/article/a378c960ea051eb329283070.html");
-				articles.add(art3);
-				newsMsg.setArticles(articles);
+				sqlSession.commit();
 				return XStreamUtil.toXML(newsMsg);
 			case ButtonKeys.SUBBUTTON_KEYS_S032:// 客户服务
 				TextMessage serverKF = new TextMessage();
@@ -187,17 +174,7 @@ public class EventDispatcher {
 		}
 		case MsgHandleUtil.EVENT_TYPE_VIEW: // 自定义菜单View事件
 		{
-			try {
-				boolean checkLogin = false;
-				if (checkLogin) {
-					resp.sendRedirect("/WeChatServerTest/login.jsp");
-				} else {
-					resp.sendRedirect("/WeChatServerTest/register.jsp");
-				}
-				System.out.println("自定义菜单 View 事件");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			System.out.println("自定义菜单 View 事件");
 			break;
 		}
 		default:

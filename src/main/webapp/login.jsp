@@ -4,8 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>WeChatWebTest</title>
+<title>login</title>
 </head>
-<body>login
+<body>
+	<%=request.getAttribute("authInfo")%>
 </body>
 </html>

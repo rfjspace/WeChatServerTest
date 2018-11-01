@@ -12,7 +12,7 @@ import com.wechatserver.util.MsgHandleUtil;
  * @Description: 消息业务处理分发器
  */
 public class MsgDispatcher {
-	public static String processMessage(Map<String, String> map, HttpServletResponse resp) {
+	public static String processMessage(Map<String, String> map) {
 		// 获取消息类型
 		String msgType = map.get("MsgType").toString();
 		switch (msgType) {

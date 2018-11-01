@@ -6,7 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 
 public class TestUpAndDown {
 

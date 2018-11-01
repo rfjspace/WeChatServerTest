@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.AccountInfoMapper">
+	<resultMap id="accountInfoMap"
+		type="com.wechatserver.entry.info.AccountInfo">
+		<result property="username" column="username"
+			javaType="java.lang.String"></result>
+		<result property="password" column="password"
+			javaType="java.lang.String"></result>
+		<result property="createTime" column="createtime"
+			javaType="java.lang.Long"></result>
+		<result property="openId" column="open_id"
+			javaType="java.lang.String"></result>
+	</resultMap>
+	<select id="selectByUsername" resultMap="accountInfoMap"
+		parameterType="java.lang.String">
+		select * from info_accounts ia where
+		ia.username=#{username};
+	</select>
+	<select id="selectByOpenId" resultMap="accountInfoMap"
+		parameterType="java.lang.String">
+		select * from info_accounts ia where
+		ia.openid=#{openId};
+	</select>
+	<insert id="insert"
+		parameterType="com.wechatserver.entry.info.AccountInfo">
+		insert into
+		info_accounts(username,password,createtime,open_id)
+		values(#{username},#{password},#{createTime},#{openId});
+	</insert>
+	<update id="updateOpenId"
+		parameterType="com.wechatserver.entry.info.AccountInfo">
+		update info_accounts set open_id =#{openId} where
+		username=#{username};
+	</update>
+</mapper>

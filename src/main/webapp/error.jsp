@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>register</title>
+<title>error</title>
 </head>
 <body>
-	<%=request.getAttribute("authInfo")%>
+	<%=request.getAttribute("error")%>
 </body>
 </html>

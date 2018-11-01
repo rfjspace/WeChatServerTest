@@ -1,6 +1,6 @@
 package com.wechatserver.util;
 
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 import com.wechatserver.wxapi.AesException;
 import com.wechatserver.wxapi.WXBizMsgCrypt;
 

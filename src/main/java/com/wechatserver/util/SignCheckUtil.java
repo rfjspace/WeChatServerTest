@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 
 /**
  * ClassName: SignUtil

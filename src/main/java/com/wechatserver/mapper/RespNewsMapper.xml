@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.RespNewsMapper">
+	<resultMap id="NewsMap"
+		type="com.wechatserver.entry.message.response.NewsMessage">
+		<result property="ToUserName" column="to_username"
+			javaType="java.lang.String"></result>
+		<result property="FromUserName" column="from_username"
+			javaType="java.lang.String"></result>
+		<result property="CreateTime" column="create_time"
+			javaType="java.lang.Long"></result>
+		<result property="MsgType" column="msg_type"
+			javaType="java.lang.String"></result>
+		<result property="ArticleCount" column="article_count"
+			javaType="java.lang.Integer"></result>
+		<!-- 一对多 数据库字段名必须与POJO一致，通过AS转换 -->
+		<collection property="Articles"
+			ofType="com.wechatserver.entry.message.response.Article"
+			select="getArticles" column="create_time" javaType="java.util.List">
+		</collection>
+	</resultMap>
+	<!-- 一对多 数据库字段名必须与POJO一致，通过AS转换 -->
+	<select id="getArticles" parameterType="java.lang.Long"
+		resultType="com.wechatserver.entry.message.response.Article">
+		select
+		increment_id,article_id,article_title as
+		Title,article_picurl as PicUrl,article_url as Url,article_description
+		as Description
+		from resp_message_news_dtl rnd where
+		rnd.article_id=#{create_time};
+	</select>
+
+	<select id="selectLastNewsMessage" resultMap="NewsMap">
+		select * from
+		resp_message_main
+		rm
+		<!-- left join resp_message_news_dtl rnd on rm.article_id = rnd.article_id -->
+		order by rm.create_time DESC limit 1;
+	</select>
+	<insert id="insert"
+		parameterType="com.wechatserver.entry.message.response.NewsMessage">
+		insert into
+		resp_message_main(to_username,from_username,create_time,msg_type,article_count,article_id)
+		values(#{ToUserName},#{FromUserName},#{CreateTime},#{MsgType},#{ArticleCount},#{CreateTime});
+	</insert>
+</mapper>

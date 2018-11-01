@@ -17,7 +17,7 @@ import com.wechatserver.dispatcher.MsgDispatcher;
 import com.wechatserver.entry.menu.ButtonKeys;
 import com.wechatserver.entry.menu.ClickButton;
 import com.wechatserver.entry.menu.ViewButton;
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 import com.wechatserver.util.CryptionUtil;
 import com.wechatserver.util.MsgHandleUtil;
 import com.wechatserver.util.SignCheckUtil;
@@ -63,7 +63,9 @@ public class MainProcessServlet extends HttpServlet {
 		ViewButton gwBt = new ViewButton();
 		gwBt.setName("官方网站");
 		gwBt.setType("view");
-		gwBt.setUrl("https://www.baidu.com");
+		String authUrl = WeChatApiUtil
+				.getUrlEncode("http://www.va5jwe.natappfree.cc/WeChatServerTest/AuthForwardServlet");
+		gwBt.setUrl(authUrl);
 		ClickButton serMsgBt = new ClickButton();
 		serMsgBt.setName("客户服务");
 		serMsgBt.setType("click");
@@ -110,6 +112,7 @@ public class MainProcessServlet extends HttpServlet {
 		main_button.add(help_menu);
 		JSONObject menu = new JSONObject();
 		menu.put("button", main_button);
+		System.out.println(menu);
 		// 创建菜单
 		WeChatApiUtil.createCustomMenu(menu.toJSONString());
 	}
@@ -131,9 +134,9 @@ public class MainProcessServlet extends HttpServlet {
 		String msgType = map.get("MsgType").toString();
 		// 消息处理的分发
 		if (MsgHandleUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)) {
-			respMsg = EventDispatcher.processEvent(map, resp); // 进入事件处理
+			respMsg = EventDispatcher.processEvent(map); // 进入事件处理
 		} else {
-			respMsg = MsgDispatcher.processMessage(map, resp); // 进入消息处理
+			respMsg = MsgDispatcher.processMessage(map); // 进入消息处理
 		}
 		// 将响应消息加密
 		if ("Encrypt".equals(MsgHandleUtil.CRYPTFLG)) {

@@ -1,6 +1,6 @@
 package com.wechatserver.backup;
 
-import com.wechatserver.info.GlobalVariables;
+import com.wechatserver.global.GlobalVariables;
 
 /***
  * 获取access_token工具类
