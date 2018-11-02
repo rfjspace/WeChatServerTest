@@ -95,6 +95,7 @@ CREATE TABLE db_wechatserver.resp_message_text_dtl(
 );
 CREATE INDEX index_text_dtl
 ON db_wechatserver.resp_message_text_dtl (text_id);
+<<<<<<< HEAD
 --
 CREATE TABLE db_wechatserver.info_accounts(
 	username varchar(11) NOT NULL,
@@ -122,6 +123,7 @@ CREATE TABLE db_wechatserver.info_users(
 );
 CREATE INDEX index_user
 ON db_wechatserver.info_users (open_id);
+
 
 
 
