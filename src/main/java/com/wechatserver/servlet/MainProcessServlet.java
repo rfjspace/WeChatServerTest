@@ -63,9 +63,7 @@ public class MainProcessServlet extends HttpServlet {
 		ViewButton gwBt = new ViewButton();
 		gwBt.setName("官方网站");
 		gwBt.setType("view");
-		String authUrl = WeChatApiUtil
-				.getUrlEncode("http://www.va5jwe.natappfree.cc/WeChatServerTest/AuthForwardServlet");
-		gwBt.setUrl(authUrl);
+		gwBt.setUrl(WeChatApiUtil.getUrlEncode(GlobalVariables.webPageAuthUrl));
 		ClickButton serMsgBt = new ClickButton();
 		serMsgBt.setName("客户服务");
 		serMsgBt.setType("click");
@@ -112,7 +110,6 @@ public class MainProcessServlet extends HttpServlet {
 		main_button.add(help_menu);
 		JSONObject menu = new JSONObject();
 		menu.put("button", main_button);
-		System.out.println(menu);
 		// 创建菜单
 		WeChatApiUtil.createCustomMenu(menu.toJSONString());
 	}

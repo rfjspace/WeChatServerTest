@@ -7,7 +7,7 @@
 			javaType="java.lang.String"></result>
 		<result property="nickName" column="nick_name"
 			javaType="java.lang.String"></result>
-		<result property="sex" column="sex" javaType="java.lang.Long"></result>
+		<result property="sex" column="sex" javaType="java.lang.String"></result>
 		<result property="province" column="province"
 			javaType="java.lang.String"></result>
 		<result property="city" column="city"

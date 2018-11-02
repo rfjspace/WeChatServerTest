@@ -1,21 +1,13 @@
 package com.wechatserver.dispatcher;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.ibatis.session.SqlSession;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.wechatserver.entry.menu.ButtonKeys;
-import com.wechatserver.entry.menu.ClickButton;
-import com.wechatserver.entry.menu.ViewButton;
 import com.wechatserver.entry.message.response.Image;
 import com.wechatserver.entry.message.response.ImageMessage;
 import com.wechatserver.entry.message.response.Music;

@@ -19,6 +19,7 @@ public class GlobalVariables {
 	public static String encodingAESKey;
 	public static String accessToken;
 	public static String expires_in;
+	public static String webPageAuthUrl;
 
 	private static Logger logger = Logger.getLogger(GlobalVariables.class.getName());
 
@@ -27,6 +28,7 @@ public class GlobalVariables {
 		GlobalVariables.appSecret = prop.getProperty("appSecret");
 		GlobalVariables.token = prop.getProperty("token");
 		GlobalVariables.encodingAESKey = prop.getProperty("encodingAESKey");
+		GlobalVariables.webPageAuthUrl = prop.getProperty("webPageAuthUrl");
 	}
 
 	public static void infoPrint() {

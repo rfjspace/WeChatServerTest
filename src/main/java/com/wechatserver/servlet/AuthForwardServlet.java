@@ -30,11 +30,12 @@ public class AuthForwardServlet extends HttpServlet {
 		// 字符编码转换
 		this.setGeneralAttributes(req, resp);
 		// 获取网页授权acess_token
+		SqlSession session = MybatisUtil.getSession();
 		try {
+			String forwardUrl = "login.jsp";
 			String code = req.getParameter("code");
 			// 用户自定义状态值
 			// String state = req.getParameter("state");
-			SqlSession session = MybatisUtil.getSession();
 			UserInfoMapper uim = session.getMapper(UserInfoMapper.class);
 			JSONObject authToken = WeChatApiUtil.getAuthToken(code);
 			// 获取用户微信信息
@@ -43,18 +44,24 @@ public class AuthForwardServlet extends HttpServlet {
 			JSONObject authInfo = WeChatApiUtil.getAuthInfo(aToken, openId);
 			// JSON转<T>泛型
 			UserInfo uInfo = JSONObject.parseObject(authInfo.toJSONString(), UserInfo.class);
-			//查询DB是否存在
+			// 查询DB是否存在
 			UserInfo userInfo = uim.selectByOpenId(uInfo.getOpenId());
-			req.setAttribute("authInfo", authInfo);
 			// 判定用户是否是网站会员
 			if (null == userInfo) {
 				uim.insert(uInfo);
-				req.getRequestDispatcher("register.jsp").forward(req, resp);
+				// 下述结构就会在第二次访问时出现重复的授权请求,导致请求code失效(???)
+				// req.getRequestDispatcher("register.jsp").forward(req, resp);
+				forwardUrl = "register.jsp";
 			}
+			session.commit();
 			// 根据结构跳转相应网页
-			req.getRequestDispatcher("login.jsp").forward(req, resp);
+			// req.getRequestDispatcher("register.jsp").forward(req, resp);
+			// req.getRequestDispatcher("login.jsp").forward(req, resp);
+			req.setAttribute("authInfo", authInfo);
+			req.getRequestDispatcher(forwardUrl).forward(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
+			session.rollback();
 			req.setAttribute("error", e);
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		}

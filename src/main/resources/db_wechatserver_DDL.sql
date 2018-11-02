@@ -101,7 +101,7 @@ CREATE TABLE db_wechatserver.info_accounts(
 	password varchar(10) NOT NULL,
 	createtime varchar(17) NOT NULL,
 	open_id varchar(35),
-	UNIQUE(openid),
+	UNIQUE(open_id),
 	CONSTRAINT pk_accounts PRIMARY KEY (username)
 );
 CREATE INDEX index_account
@@ -122,6 +122,7 @@ CREATE TABLE db_wechatserver.info_users(
 );
 CREATE INDEX index_user
 ON db_wechatserver.info_users (open_id);
+
 
 
 
