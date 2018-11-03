@@ -12,9 +12,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.wechatserver.entry.menu.ButtonKeys;
+import com.wechatserver.entry.menu.ClickButton;
+import com.wechatserver.entry.menu.ViewButton;
 import com.wechatserver.entry.message.response.Article;
 import com.wechatserver.entry.message.response.NewsMessage;
 import com.wechatserver.mapper.DatebaseDDLMapper;
+import com.wechatserver.mapper.MenuCreateMapper;
 import com.wechatserver.mapper.RespArticleMapper;
 import com.wechatserver.mapper.RespNewsMapper;
 
@@ -64,9 +70,143 @@ public class TestMybatis {
 	public void testDropTable() {
 		SqlSession ss = MybatisUtil.getSession();
 		DatebaseDDLMapper ddm = ss.getMapper(DatebaseDDLMapper.class);
-		// ddm.createTable();
+		ddm.dropTable();
+		ddm.createTable();
 		// ddm.deleteTableData();
 		ss.commit();
+	}
+
+	@Test
+	public void testButton() {
+		this.testDropTable();
+		SqlSession ss = MybatisUtil.getSession();
+		MenuCreateMapper mcm = ss.getMapper(MenuCreateMapper.class);
+		ClickButton newMsgBt = new ClickButton();
+		newMsgBt.setName("最新消息");
+		newMsgBt.setType("click");
+		newMsgBt.setKey(ButtonKeys.BUTTON_KEYS_F001);
+		ViewButton gwBt = new ViewButton();
+		gwBt.setName("官方网站");
+		gwBt.setType("view");
+		gwBt.setUrl(WeChatApiUtil.getUrlEncode("http://www.4nyb55.natappfree.cc/WeChatServerTest/AuthForwardServlet"));
+		ClickButton serMsgBt = new ClickButton();
+		serMsgBt.setName("客户服务");
+		serMsgBt.setType("click");
+		serMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S032);
+		ClickButton textMsgBt = new ClickButton();
+		textMsgBt.setName("文本测试");
+		textMsgBt.setType("click");
+		textMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S021);
+		ClickButton imageMsgBt = new ClickButton();
+		imageMsgBt.setName("图片测试");
+		imageMsgBt.setType("click");
+		imageMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S022);
+		ClickButton musicMsgBt = new ClickButton();
+		musicMsgBt.setName("音乐测试");
+		musicMsgBt.setType("click");
+		musicMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S023);
+		ClickButton videoMsgBt = new ClickButton();
+		videoMsgBt.setName("视频测试");
+		videoMsgBt.setType("click");
+		videoMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S024);
+		ClickButton voiceMsgBt = new ClickButton();
+		voiceMsgBt.setName("语音测试");
+		voiceMsgBt.setType("click");
+		voiceMsgBt.setKey(ButtonKeys.SUBBUTTON_KEYS_S025);
+		// // 创建菜单结构
+		// JSONArray sub_button = new JSONArray();
+		// sub_button.add(textMsgBt);
+		// sub_button.add(imageMsgBt);
+		// sub_button.add(musicMsgBt);
+		// sub_button.add(videoMsgBt);
+		// sub_button.add(voiceMsgBt);
+		// JSONObject sub_menu = new JSONObject();
+		// sub_menu.put("name", "消息菜单");
+		// sub_menu.put("sub_button", sub_button);
+		// JSONArray help_button = new JSONArray();
+		// help_button.add(gwBt);
+		// help_button.add(serMsgBt);
+		// JSONObject help_menu = new JSONObject();
+		// help_menu.put("name", "帮助服务");
+		// help_menu.put("sub_button", help_button);
+		// JSONArray main_button = new JSONArray();
+		// main_button.add(newMsgBt);
+		// main_button.add(sub_menu);
+		// main_button.add(help_menu);
+		// JSONObject menu = new JSONObject();
+		// menu.put("button", main_button);
+		mcm.insertClickButton(newMsgBt, 1, null);
+		mcm.insertSubButton("消息菜单");
+		mcm.insertSubButton("帮助服务");
+		mcm.insertViewButton(gwBt, 2, "帮助服务");
+		mcm.insertClickButton(serMsgBt, 2, "帮助服务");
+		mcm.insertClickButton(textMsgBt, 2, "消息菜单");
+		mcm.insertClickButton(imageMsgBt, 2, "消息菜单");
+		mcm.insertClickButton(musicMsgBt, 2, "消息菜单");
+		mcm.insertClickButton(videoMsgBt, 2, "消息菜单");
+		mcm.insertClickButton(voiceMsgBt, 2, "消息菜单");
+		ss.commit();
+		// SqlSession ss = MybatisUtil.getSession();
+		// MenuCreateMapper mcm = ss.getMapper(MenuCreateMapper.class);
+		List<Map<String, Object>> menuList = mcm.selectMainMenu();
+		JSONObject menu = new JSONObject();
+		JSONArray mainButton = new JSONArray();
+		for (Map<String, Object> m : menuList) {
+			int level = (int) m.get("menu_level");
+			if (level == 1) {
+				String mainType = m.get("button_type").toString();
+				switch (mainType) {
+				case "sub":
+					String helpMenu = m.get("button_name").toString();
+					JSONObject subMenu = new JSONObject();
+					subMenu.put("name", helpMenu);
+					JSONArray subButton = new JSONArray();
+					List<Map<String, Object>> childList = mcm.selectBySuperName(helpMenu);
+					for (Map<String, Object> c : childList) {
+						String subType = c.get("button_type").toString();
+						switch (subType) {
+						case "click":
+							ClickButton cb = new ClickButton();
+							cb.setType(c.get("button_type").toString());
+							cb.setName(c.get("button_name").toString());
+							cb.setKey(c.get("click_key").toString());
+							subButton.add(cb);
+							break;
+						case "view":
+							ViewButton vb = new ViewButton();
+							vb.setType(c.get("button_type").toString());
+							vb.setName(c.get("button_name").toString());
+							vb.setUrl(c.get("view_url").toString());
+							subButton.add(vb);
+							break;
+						default:
+							break;
+						}
+					}
+					subMenu.put("sub_button", subButton);
+					mainButton.add(subMenu);
+					break;
+				case "click":
+					ClickButton cb = new ClickButton();
+					cb.setType(m.get("button_type").toString());
+					cb.setName(m.get("button_name").toString());
+					cb.setKey(m.get("click_key").toString());
+					mainButton.add(cb);
+					break;
+				case "view":
+					ViewButton vb = new ViewButton();
+					vb.setType(m.get("button_type").toString());
+					vb.setName(m.get("button_name").toString());
+					vb.setUrl(m.get("view_url").toString());
+					mainButton.add(vb);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		menu.put("button", mainButton);
+		System.out.println(menu);
 	}
 
 	@Test

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.MenuCreateMapper">
+	<select id="selectMainMenu" resultType="java.util.Map">
+		select * from info_menu
+		im where
+		im.display = 1 and menu_level=1 order by increment_id;
+	</select>
+	<select id="selectBySuperName" resultType="java.util.Map">
+		select * from
+		info_menu
+		im where
+		im.display = 1 and im.menu_level=2 and
+		im.super_name=#{arg0} order by increment_id;
+	</select>
+	<insert id="insertClickButton">
+		insert into
+		info_menu(button_type,button_name,click_key,menu_level,super_name,display)
+		values(#{arg0.type},#{arg0.name},#{arg0.key},#{arg1},#{arg2},1);
+	</insert>
+	<insert id="insertViewButton">
+		insert into
+		info_menu(button_type,button_name,view_url,menu_level,super_name,display)
+		values(#{arg0.type},#{arg0.name},#{arg0.url},#{arg1},#{arg2},1);
+	</insert>
+	<insert id="insertSubButton">
+		insert into
+		info_menu(button_type,button_name,menu_level,display)
+		values('sub',#{name},1,1);
+	</insert>
+	<update id="updateViewUrl">
+		update info_menu set view_url = #{arg1} where
+		button_name=#{arg0};
+	</update>
+</mapper>

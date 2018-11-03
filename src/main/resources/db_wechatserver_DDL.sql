@@ -122,6 +122,20 @@ CREATE TABLE db_wechatserver.info_users(
 );
 CREATE INDEX index_user
 ON db_wechatserver.info_users (open_id);
+--
+CREATE table db_wechatserver.info_menu(
+	increment_id int AUTO_INCREMENT,
+	button_type varchar(5) NOT NULL,
+	button_name varchar(10) NOT NULL,
+	click_key varchar(50),
+	view_url  varchar(255),
+	menu_level int(1) NOT NULL,
+	super_name varchar(10),
+	display int,
+	CONSTRAINT pk_menu PRIMARY KEY(increment_id)
+);
+CREATE INDEX index_menu 
+ON db_wechatserver.info_menu(increment_id);
 
 
 

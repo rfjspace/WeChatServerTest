@@ -2,8 +2,6 @@ package com.wechatserver.dispatcher;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import com.wechatserver.util.MsgHandleUtil;
 
 /**
