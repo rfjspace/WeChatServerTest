@@ -1,5 +1,6 @@
 package com.wechatserver.util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +20,9 @@ import com.wechatserver.entry.menu.ClickButton;
 import com.wechatserver.entry.menu.ViewButton;
 import com.wechatserver.entry.message.response.Article;
 import com.wechatserver.entry.message.response.NewsMessage;
+import com.wechatserver.global.GlobalVariables;
 import com.wechatserver.mapper.DatebaseDDLMapper;
+import com.wechatserver.mapper.MaterialFileMapper;
 import com.wechatserver.mapper.MenuCreateMapper;
 import com.wechatserver.mapper.RespArticleMapper;
 import com.wechatserver.mapper.RespNewsMapper;
@@ -63,6 +66,7 @@ public class TestMybatis {
 		ss.commit();
 		am.selectByArticleId(articleId);
 		am.selectAll();
+		ss.close();
 
 	}
 
@@ -74,11 +78,12 @@ public class TestMybatis {
 		ddm.createTable();
 		// ddm.deleteTableData();
 		ss.commit();
+		ss.close();
 	}
 
 	@Test
 	public void testButton() {
-		this.testDropTable();
+		// this.testDropTable();
 		SqlSession ss = MybatisUtil.getSession();
 		MenuCreateMapper mcm = ss.getMapper(MenuCreateMapper.class);
 		ClickButton newMsgBt = new ClickButton();
@@ -207,6 +212,7 @@ public class TestMybatis {
 		}
 		menu.put("button", mainButton);
 		System.out.println(menu);
+		ss.close();
 	}
 
 	@Test
@@ -256,5 +262,31 @@ public class TestMybatis {
 		for (Article a : newM.getArticles()) {
 			System.out.println(a.getTitle());
 		}
+		ss.close();
+	}
+
+	@Test
+	public void testMaterialFile() throws Exception {
+		this.testDropTable();
+		SqlSession ss = MybatisUtil.getSession();
+		MaterialFileMapper mfm = ss.getMapper(MaterialFileMapper.class);
+
+		String location = "/images/";
+		String name = "image01.jpg";
+		String type = "image";
+		File file = new ResourceLoadUtil().fileLoad(location.concat(name));
+		GlobalVariables.accessToken = "15_UmpEVQgdYQPBpxShJGjhfAd2AATOEGrHvKAmAbzxKfbtUd6wUOgWPNS5mL7A4tgJ-IyJpzaYwbB4LgI_cY7eQCEnSB3FSdfpxUL19iTyzIoIV7x7VZD5XMq1vTheoihRLnyE5bbFz9C49iHPKPMiADATYV";
+		String mediaId = WeChatApiUtil.getUploadMediaId(file, "image");
+		if (mediaId == null) {
+			throw new Exception();
+		}
+		Map<String, String> fileMap = new HashMap<String, String>();
+		fileMap.put("matName", name);
+		fileMap.put("matType", type);
+		fileMap.put("matId", mediaId);
+		mfm.insertFile(fileMap);
+		mfm.selectFileByName(name);
+		ss.commit();
+		ss.close();
 	}
 }

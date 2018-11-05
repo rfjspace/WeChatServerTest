@@ -136,7 +136,16 @@ CREATE table db_wechatserver.info_menu(
 );
 CREATE INDEX index_menu 
 ON db_wechatserver.info_menu(increment_id);
-
+--
+CREATE table db_wechatserver.info_material(
+	mat_name varchar(15) NOT NULL,
+	mat_type varchar(10) NOT NULL,
+	mat_id varchar(100) NOT NULL,
+	mat_timestamp varchar(14) NOT NULL,
+	CONSTRAINT pk_material PRIMARY KEY(mat_name)
+);
+CREATE INDEX index_material 
+ON db_wechatserver.info_material(mat_name,mat_id);
 
 
 

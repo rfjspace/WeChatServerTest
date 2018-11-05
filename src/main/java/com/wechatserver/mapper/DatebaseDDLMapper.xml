@@ -2,23 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wechatserver.mapper.DatebaseDDLMapper">
 	<update id="createTable">
-		CREATE table db_wechatserver.info_menu(
-		increment_id int AUTO_INCREMENT,
-		button_type varchar(5) NOT NULL,
-		button_name varchar(10) NOT NULL,
-		click_key varchar(50),
-		view_url varchar(255),
-		menu_level int(1) NOT NULL,
-		super_name varchar(10),
-		display int,
-		CONSTRAINT pk_menu PRIMARY KEY(increment_id)
-		);
-		CREATE INDEX index_menu
-		ON db_wechatserver.info_menu(increment_id);
+CREATE table db_wechatserver.info_material(
+	mat_name varchar(15) NOT NULL,
+	mat_type varchar(10) NOT NULL,
+	mat_id varchar(100) NOT NULL,
+	mat_timestamp varchar(14) NOT NULL,
+	CONSTRAINT pk_material PRIMARY KEY(mat_name)
+);
+CREATE INDEX index_material 
+ON db_wechatserver.info_material(mat_name,mat_id);
 
 	</update>
 	<update id="dropTable">
-		DROP TABLE db_wechatserver.info_menu;
+		DROP TABLE IF EXISTS db_wechatserver.info_material;
 	</update>
 	<update id="deleteTableData">
 		delete form db_wechatserver.resp_message_main;

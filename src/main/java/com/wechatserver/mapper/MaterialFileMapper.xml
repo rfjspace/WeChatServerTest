@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wechatserver.mapper.MaterialFileMapper">
+	<select id="selectFileByName" resultType="java.util.Map">
+		select * from
+		info_material
+		im where
+		im.mat_name=#{fileName};
+	</select>
+	<insert id="insertFile">
+		insert into
+		info_material(mat_name,mat_type,mat_id,mat_timestamp)
+		values(#{matName},#{matType},#{matId},#{matTimestamp});
+	</insert>
+	<update id="deleteFileByName">
+		delete from info_material im where im.mat_name=#{fileName};
+	</update>
+</mapper>
