@@ -4,26 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>WeChatWebTest</title>
+<title>微信公众号后台管理</title>
 </head>
-<body>
-	<form action="/WeChatServerTest/MainProcessServlet" method="post">
-		<label for="wcinput">微信客户端：</label> <input id="wcinput"
-			name="wcmessages" type="text"> <br> <input type="submit"
-			value="发送"></input>
-	</form>
-	<br>
-	<form action="/WeChatServerTest/MainProcessServlet" method="get">
-		<label for="signature">signature：</label> <input id="signature"
-			name="signature" type="text"> <br> <label
-			for="timestamp">timestamp：</label> <input id="timestamp"
-			name="timestamp" type="text"> <br> <label for="nonce">nonce：</label>
-		<input id="nonce" name="nonce" type="text"> <br> <label
-			for="echostr">echostr：</label> <input id="echostr" name="echostr"
-			type="text"> <br> <input type="submit" value="发送"></input>
-	</form>
-	<form action="/WeChatServerTest/TestSend" method="post">
-		<label>跳转：</label> <br> <input type="submit" value="跳转"></input>
-	</form>
-</body>
+<body></body>
 </html>
