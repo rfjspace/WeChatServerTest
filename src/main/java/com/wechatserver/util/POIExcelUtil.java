@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+
 /***
  * 
  * @Description Excel文件处理读取，并转换为任意实体对象
@@ -39,7 +40,7 @@ public class POIExcelUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> read(File file, Class<T> clazz) throws Exception {
 		InputStream is = new FileInputStream(file);
-		// apache的POI Workbook，excel文件兼容性
+		// apche的POI Workbook，excel文件兼容性
 		Workbook excel = WorkbookFactory.create(is);
 		Object obj = null;
 		Method method = null;
